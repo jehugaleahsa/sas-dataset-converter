@@ -51,7 +51,7 @@ After completing the setup, you should be able to run a conversion with the foll
 python converter.py --input=<path-to-input> --output=<path-to-output>
 ```
 
-Replace `<path-to-input>` with the path to the directory containing XPT or SAS7BDAT files. Make sure to provide is an absolute path. Replace `<path-to-output>` with the path to the directory where you want to store the converted dataset file.
+Replace `<path-to-input>` with the path to the directory containing XPT or SAS7BDAT files. Make sure to provide an absolute path. Replace `<path-to-output>` with the path to the directory where you want to store the converted dataset file.
 
 > If your directory paths contain spaces or other special characters, you might need to wrap the paths in quotes (`"`).
 
