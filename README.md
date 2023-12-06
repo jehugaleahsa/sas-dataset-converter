@@ -22,7 +22,7 @@ Create a virtual environment for the project by typing:
 python -m venv env
 ```
 
-After a few moments, a `sas-dataset-converter` sub-directory will be created.
+After a few moments, a `env` sub-directory will be created.
 
 On Mac/Linux, you can activate the environment by typing:
 
