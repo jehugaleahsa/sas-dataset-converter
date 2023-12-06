@@ -377,7 +377,7 @@ These are the rules governing each section, object, and attribute:
 * The type of the value must correspond to the `type` specified on the column, unless missing.
 * Missing values must be specified as `null`.
 * The floating point numeric values of `NaN`, `Inf`, and `-Inf` are illegal. Use `null` to represent `NaN`.
-* Exactly one of `reference` or `rows` must appear - one or the other, not both.
+* Exactly one of `external` or `rows` must appear - one or the other, not both.
 
 > All the values in a column must be of the same type, corresponding with the `type` specified in the column definition. The `null` value can be any type and can appear in any column where `nullable` is either undefined or set to `true`. For IEEE-754 floating point numbers, `null` must be used instead of `NaN`.
 
