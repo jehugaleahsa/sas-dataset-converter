@@ -422,7 +422,7 @@ Many columns in a dataset are comprised of a limited number of values. Processor
 > NOTE: The row data must contain the category values. An alternative would have been to simply store the category index instead. JSON processors can represent categorical data any way they want, but in the JSON the full values must be provided.
 
 ### External Data with `external`
-Rather than using `rows`, a dataset can specify that its data is located externally, in a separate file using `external`. For now, there are limited details around what must be contained in the `external` string. The expectation is that it is a file path, relative to the current file. The contents of the data file are not specified either.
+Rather than using `rows`, a dataset can specify that its data is located externally, in a separate file using `external`. For now, there are limited details around what must be contained in the `location` string. The expectation is that it is a file path, relative to the current file. The contents of the data file are not specified either.
 
 In practice, the referenced data will be stored in a [JSON lines](https://jsonlines.org/) document, where each line in the file corresponds to a row. In which case, it's as if the contents of `rows` were moved into a separate file, without the need of comma separators. For example:
 
