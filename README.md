@@ -246,24 +246,24 @@ Notice the metadata is formatted JSON, and there is no row data. In a real file,
 
 ```json
 ["CDISC01", "AE", "CDISC01.100008", 1.0, "1", "AGITATED", "AGITATION", "Agitation", "Psychiatric disorders", "MILD", "N", "DOSE NOT CHANGED", "POSSIBLY RELATED", "2003-05", null, 3.0, null, "AFTER"]
-[ "CDISC01", "AE", "CDISC01.100008", 2.0, "2", "ANXIETY", null, "Anxiety", "Psychiatric disorders", "MODERATE", "N", "DOSE NOT CHANGED", "POSSIBLY RELATED", "2003-05-13", null, 15.0, null, "AFTER"]
-[ "CDISC01", "AE", "CDISC01.100008", 3.0, "3", "DECREASED APPETITE", null, "Decreased appetite", "Metabolism and nutrition disorders", "MILD", "N", "DOSE NOT CHANGED", "POSSIBLY RELATED", "2003-08-19", "2003-09-15", 113.0, 140.0, null]
-[ "CDISC01", "AE", "CDISC01.100014", 1.0, "1", "DIARRHEA", null, "Diarrhoea", "Gastrointestinal disorders", "MILD", "N", "DOSE NOT CHANGED", "NOT RELATED", "2004-01-06", null, 84.0, null, "AFTER"]
-[ "CDISC01", "AE", "CDISC01.100014", 2.0, "2", "HEMORRHOIDS", null, "Haemorrhoids", "Gastrointestinal disorders", "MODERATE", "N", "DOSE NOT CHANGED", "NOT RELATED", "2004-01-06", null, 84.0, null, "AFTER"]
-[ "CDISC01", "AE", "CDISC01.100014", 3.0, "3", "HEADACHE", null, "Headache", "Nervous system disorders", "MILD", "N", "DOSE NOT CHANGED", "NOT RELATED", "2004-01-27", null, 105.0, null, "AFTER"]
-[ "CDISC01", "AE", "CDISC01.100014", 4.0, "4", "VOMIT", "VOMITING", "Vomiting", "Gastrointestinal disorders", "MODERATE", "N", "DRUG INTERRUPTED", "POSSIBLY RELATED", "2004-02-03", "2004-02-03", 112.0, 112.0, null]
-[ "CDISC01", "AE", "CDISC01.100014", 5.0, "5", "VOMIT", "VOMITING", "Vomiting", "Gastrointestinal disorders", "SEVERE", "Y", "DRUG INTERRUPTED", "POSSIBLY RELATED", "2004-02-04", "2004-02-09", 113.0, 118.0, null]
-[ "CDISC01", "AE", "CDISC01.200001", 1.0, "1", "ANXIETY", null, "Anxiety", "Psychiatric disorders", "SEVERE", "N", "DOSE NOT CHANGED", "POSSIBLY RELATED", "2003-10-16", "2003-10-20", 17.0, 21.0, null]
-[ "CDISC01", "AE", "CDISC01.200001", 2.0, "5", "LEFT KNEE PAIN WORSENING", null, "Arthralgia", "Musculoskeletal and connective tissue disorders", "SEVERE", "N", "DRUG WITHDRAWN", "NOT RELATED", "2004-02-02", null, 126.0, null, "AFTER"]
-[ "CDISC01", "AE", "CDISC01.200001", 3.0, "3", "CONSTIPATION", null, "Constipation", "Gastrointestinal disorders", "MODERATE", "N", "DOSE NOT CHANGED", "NOT RELATED", "2003-12-25", null, 87.0, null, "AFTER"]
-[ "CDISC01", "AE", "CDISC01.200001", 4.0, "4", "TIREDNESS", null, "Fatigue", "General disorders and administration site conditions", "SEVERE", "N", "DOSE NOT CHANGED", "POSSIBLY RELATED", "2003-12-25", null, 87.0, null, "AFTER"]
-[ "CDISC01", "AE", "CDISC01.200001", 5.0, "2", "NAUSEA INTERMITTENT", null, "Nausea", "Gastrointestinal disorders", "SEVERE", "N", "DOSE NOT CHANGED", "POSSIBLY RELATED", "2003-10-16", "2003-10-20", 17.0, 21.0, null]
-[ "CDISC01", "AE", "CDISC01.200002", 1.0, "3", "LIGHTHEADEDNESS", null, "Dizziness", "Nervous system disorders", "MILD", "N", "DOSE NOT CHANGED", "NOT RELATED", "2004-02-26", "2004-02-26", 140.0, 140.0, null]
-[ "CDISC01", "AE", "CDISC01.200002", 2.0, "1", "MUSCLE SPASMS", null, "Muscle spasms", "Musculoskeletal and connective tissue disorders", "MILD", "N", "DOSE NOT CHANGED", "NOT RELATED", "2004-01-05", null, 88.0, null, "AFTER" ]
+["CDISC01", "AE", "CDISC01.100008", 2.0, "2", "ANXIETY", null, "Anxiety", "Psychiatric disorders", "MODERATE", "N", "DOSE NOT CHANGED", "POSSIBLY RELATED", "2003-05-13", null, 15.0, null, "AFTER"]
+["CDISC01", "AE", "CDISC01.100008", 3.0, "3", "DECREASED APPETITE", null, "Decreased appetite", "Metabolism and nutrition disorders", "MILD", "N", "DOSE NOT CHANGED", "POSSIBLY RELATED", "2003-08-19", "2003-09-15", 113.0, 140.0, null]
+["CDISC01", "AE", "CDISC01.100014", 1.0, "1", "DIARRHEA", null, "Diarrhoea", "Gastrointestinal disorders", "MILD", "N", "DOSE NOT CHANGED", "NOT RELATED", "2004-01-06", null, 84.0, null, "AFTER"]
+["CDISC01", "AE", "CDISC01.100014", 2.0, "2", "HEMORRHOIDS", null, "Haemorrhoids", "Gastrointestinal disorders", "MODERATE", "N", "DOSE NOT CHANGED", "NOT RELATED", "2004-01-06", null, 84.0, null, "AFTER"]
+["CDISC01", "AE", "CDISC01.100014", 3.0, "3", "HEADACHE", null, "Headache", "Nervous system disorders", "MILD", "N", "DOSE NOT CHANGED", "NOT RELATED", "2004-01-27", null, 105.0, null, "AFTER"]
+["CDISC01", "AE", "CDISC01.100014", 4.0, "4", "VOMIT", "VOMITING", "Vomiting", "Gastrointestinal disorders", "MODERATE", "N", "DRUG INTERRUPTED", "POSSIBLY RELATED", "2004-02-03", "2004-02-03", 112.0, 112.0, null]
+["CDISC01", "AE", "CDISC01.100014", 5.0, "5", "VOMIT", "VOMITING", "Vomiting", "Gastrointestinal disorders", "SEVERE", "Y", "DRUG INTERRUPTED", "POSSIBLY RELATED", "2004-02-04", "2004-02-09", 113.0, 118.0, null]
+["CDISC01", "AE", "CDISC01.200001", 1.0, "1", "ANXIETY", null, "Anxiety", "Psychiatric disorders", "SEVERE", "N", "DOSE NOT CHANGED", "POSSIBLY RELATED", "2003-10-16", "2003-10-20", 17.0, 21.0, null]
+["CDISC01", "AE", "CDISC01.200001", 2.0, "5", "LEFT KNEE PAIN WORSENING", null, "Arthralgia", "Musculoskeletal and connective tissue disorders", "SEVERE", "N", "DRUG WITHDRAWN", "NOT RELATED", "2004-02-02", null, 126.0, null, "AFTER"]
+["CDISC01", "AE", "CDISC01.200001", 3.0, "3", "CONSTIPATION", null, "Constipation", "Gastrointestinal disorders", "MODERATE", "N", "DOSE NOT CHANGED", "NOT RELATED", "2003-12-25", null, 87.0, null, "AFTER"]
+["CDISC01", "AE", "CDISC01.200001", 4.0, "4", "TIREDNESS", null, "Fatigue", "General disorders and administration site conditions", "SEVERE", "N", "DOSE NOT CHANGED", "POSSIBLY RELATED", "2003-12-25", null, 87.0, null, "AFTER"]
+["CDISC01", "AE", "CDISC01.200001", 5.0, "2", "NAUSEA INTERMITTENT", null, "Nausea", "Gastrointestinal disorders", "SEVERE", "N", "DOSE NOT CHANGED", "POSSIBLY RELATED", "2003-10-16", "2003-10-20", 17.0, 21.0, null]
+["CDISC01", "AE", "CDISC01.200002", 1.0, "3", "LIGHTHEADEDNESS", null, "Dizziness", "Nervous system disorders", "MILD", "N", "DOSE NOT CHANGED", "NOT RELATED", "2004-02-26", "2004-02-26", 140.0, 140.0, null]
+["CDISC01", "AE", "CDISC01.200002", 2.0, "1", "MUSCLE SPASMS", null, "Muscle spasms", "Musculoskeletal and connective tissue disorders", "MILD", "N", "DOSE NOT CHANGED", "NOT RELATED", "2004-01-05", null, 88.0, null, "AFTER" ]
 ["CDISC01", "AE", "CDISC01.200002", 3.0, "2", "PALPITATIONS INTERMITTENT", null, "Palpitations", "Cardiac disorders", "MILD", "N", "DOSE NOT CHANGED", "NOT RELATED", "2004-01-05", null, 88.0, null, "AFTER"]
 ```
 
-The underlying file format is known as [JSON Lines](https://jsonlines.org/). Only the first row may contain dataset metadata. The first row must be formatted such that a newline (\n) does not appear. Each subsequent line is an array of row data, which also must be formatted such that a newline (\n) does not appear. Each line can there therefore be parsed as an independent JSON object/array.
+The underlying file format is known as [JSON Lines](https://jsonlines.org/). Only the first row may contain dataset metadata. The first row must be formatted such that a newline does not appear. Each subsequent line is an array of row data, which also must be formatted such that a newline does not appear. Each line can there therefore be parsed as an independent JSON object/array.
 
 If the data should be stored in a separate file, the first line must provide an `external` object, describing the location of the data. The `metadata` object can be used to provide more details, such as a file format, if necessary. 
 
