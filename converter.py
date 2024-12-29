@@ -1,3 +1,4 @@
+from io import TextIOWrapper
 from pathlib import Path
 from datetime import datetime
 from argparse import ArgumentParser
@@ -25,76 +26,59 @@ pandas_type_map = {
     np.dtypes.Float32DType: "f32",
 }
 
-def convert_sas7bdat(input: Path, output: Path, pretty_print: bool, external: bool):
+def convert_sas7bdat(input: Path, output: Path):
     file = { "version": "1.0.0" }
-    file["metadata"] = convert_file_metadata()
-    file["datasets"] = [convert_sas7bdat_dataset(input, output, external)]
+    data_frame = convert_sas7bdat_dataset(file, input)
+    write_file(output, file, data_frame)
 
-    write_json(output, file, pretty_print)
-
-def convert_xport(input: Path, output: Path, pretty_print: bool, external: bool):
+def convert_xport(input: Path, output: Path):
     file = { "version": "1.0.0" }
-    file["metadata"] = convert_file_metadata()
-    file["datasets"] = [convert_xport_dataset(input, output, external)]
+    data_frame = convert_xport_dataset(file, input)
+    write_file(output, file, data_frame)
 
-    write_json(output, file, pretty_print)
-    
-def convert_file_metadata() -> dict:
+def convert_sas7bdat_dataset(file: dict, input: Path) -> pd.DataFrame:
+    data_frame, file_metadata = pyreadstat.read_sas7bdat(
+        input, 
+        encoding="utf-8",
+        disable_datetime_conversion=True
+    )
+    add_dataset_metadata(file, data_frame, file_metadata)
+    return data_frame
+
+def convert_xport_dataset(file: dict, input: Path) -> pd.DataFrame:
+    data_frame, file_metadata = pyreadstat.read_xport(
+        input, 
+        encoding="utf-8", 
+        disable_datetime_conversion=True
+    )
+    add_dataset_metadata(file, data_frame, file_metadata)
+    return data_frame
+
+def add_dataset_metadata(file: dict, data_frame: pd.DataFrame, file_metadata):
+    file["name"] = file_metadata.table_name
+    file["metadata"] = get_default_file_metadata(file)
+    enrich_metadata(file["metadata"], data_frame, file_metadata)
+
+    columns = [get_column_metadata(file_metadata, column_name) for column_name in file_metadata.column_names]
+    file["columns"] = convert_dataset_columns(columns, data_frame)
+
+def get_default_file_metadata(file: dict) -> dict:
     now = datetime.now()
     return {
         "creationDateTime": now.isoformat(),
         "modificationDateTime": now.isoformat()
     }
 
-def convert_sas7bdat_dataset(input: Path, output: Path, external: bool) -> dict:
-    data_frame, file_metadata = pyreadstat.read_sas7bdat(
-        input, 
-        encoding="utf-8",
-        disable_datetime_conversion=True
-    )
-    return convert_dataset(data_frame, file_metadata, output, external)
-
-def convert_xport_dataset(input: Path, output: Path, external: bool) -> dict:
-    data_frame, file_metadata = pyreadstat.read_xport(
-        input, 
-        encoding="utf-8", 
-        disable_datetime_conversion=True
-    )
-    return convert_dataset(data_frame, file_metadata, output, external)
-
-def convert_dataset(data_frame: pd.DataFrame, file_metadata, output: Path, external: bool):
-    data_frame.replace("", np.nan, inplace=True)
-    metadata = get_metadata(file_metadata)
-    dataset = { "name": metadata.get("datasetName") }
-    if "recordCount" not in metadata:
-        metadata["recordCount"] = len(data_frame.index)
-    dataset_metadata = convert_dataset_metadata(metadata)
-    if len(dataset_metadata) > 0:
-        dataset["metadata"] = dataset_metadata
-    dataset["columns"] = convert_dataset_columns(metadata, data_frame)
-    data_frame.replace(np.nan, None, inplace=True)
-    if external:
-        location = f"./{output.stem}-data.jsonl"
-        dataset["external"] = { "location": location }
-        output_lines = output.parent.joinpath(location).resolve()
-        write_json_lines(output_lines, data_frame)
-    else:
-        dataset["rows"] = data_frame.values.tolist()
-    return dataset
-
-def get_metadata(file_metadata):
-    metadata = {}
-    metadata["datasetName"] = file_metadata.table_name
-    if not is_blank(file_metadata.file_label):
-        metadata["label"] = file_metadata.file_label
+def enrich_metadata(metadata: dict, data_frame: pd.DataFrame, file_metadata):    
     if file_metadata.number_rows is not None:
         metadata["recordCount"] = file_metadata.number_rows
+    else:
+        metadata["recordCount"] = len(data_frame.index)
+
     if file_metadata.creation_time is not None:
         metadata["creationDateTime"] = file_metadata.creation_time.isoformat()
     if file_metadata.modification_time is not None:
         metadata["modificationDateTime"] = file_metadata.modification_time.isoformat()
-    metadata["columns"] = [get_column_metadata(file_metadata, column_name) for column_name in file_metadata.column_names]
-    return metadata
 
 def get_column_metadata(file_metadata, column_name: str) -> dict:
     metadata = {}
@@ -116,12 +100,7 @@ def get_column_metadata(file_metadata, column_name: str) -> dict:
 def is_blank(value: str) -> bool:
     return value is None or len(value.rstrip()) == 0
 
-def convert_dataset_metadata(metadata: dict) -> dict:
-    keys = ["record_count", "label", "creationDateTime", "modificationDateTime"]
-    return prune(metadata, keys)
-
-def convert_dataset_columns(dataset_metadata: dict, data: pd.DataFrame) -> dict:
-    columns = dataset_metadata.get("columns", [])
+def convert_dataset_columns(columns: list[dict], data: pd.DataFrame) -> dict:
     return [convert_dataset_column(column, data) for column in columns]
 
 def convert_dataset_column(column_metadata: dict, data: pd.DataFrame) -> dict:
@@ -146,44 +125,33 @@ def derive_type(metadata: dict, data: pd.DataFrame, name: str) -> str:
     pandas_type = type(data.dtypes[name])
     data_type = pandas_type_map.get(pandas_type)
     if data_type is not None:
-        if data_type == "string":
-            max_length = data[name].str.len().max()
-            return f"{data_type}({max_length})"
-        else:
-            return data_type
+        return data_type
     
-    if metadata["type"] == "number":
-        return "f64"
-    
-    max_length = data[name].str.len().max()
-    if np.isnan(max_length):
-        return "string" 
-    else:
-        return f"string({int(max_length)})"
+    return "f64" if metadata["type"] == "number" else "string"
 
-def write_json(output: Path, file: dict, pretty_print: bool):
+def write_file(output: Path, file: dict, data_frame: pd.DataFrame):
     with open(output, 'w') as out:
-        if pretty_print:
-            separators = None
-            indent = 4
-        else:
-            separators = (',', ':')
-            indent = None
-        json.dump(
-            file, 
-            out, 
-            ensure_ascii=False, 
-            indent=indent, 
-            check_circular=False, 
-            separators=separators
-        )
+        write_json_line(out, file)
 
-def write_json_lines(output: Path, data_frame: pd.DataFrame):
-    with open(output, 'w') as out:
+        # Replace empty strings, NaN, Inf, and -Inf with None
+        data_frame.replace(["", np.nan, np.Inf, -np.Inf], None, inplace=True)
+
+        # Currently, this is the only way to write 
         for _, row in data_frame.iterrows():
-            line = json.dumps(row.tolist())
-            out.write(line)
-            out.write("\n")
+            values = row.to_list()
+            write_json_line(out, values)
+
+def write_json_line(out: TextIOWrapper, file: dict | list):
+    separators = (',', ':')
+    json.dump(
+        file, 
+        out, 
+        ensure_ascii=False, 
+        indent=None, 
+        check_circular=False, 
+        separators=separators
+    )
+    out.write("\n")
 
 def get_input_files(input: Path, extension: str) -> list[Path]:
     if input.is_dir():
@@ -208,7 +176,7 @@ if __name__ == "__main__":
         "--input", 
         required=True, 
         type=Path,
-        help="The path to a file or directory containing .sas7bdat or .xpt files."
+        help="The path to a SAS file, or directory containing SAS files."
     )
     parser.add_argument(
         "-o", 
@@ -218,13 +186,6 @@ if __name__ == "__main__":
         help="The path to the directory to store the converted JSON file(s)."
     )
     parser.add_argument(
-        "-p", 
-        "--pretty", 
-        required=False, 
-        action="store_true",
-        help="If specified, the generated JSON document will be formatted to be human-readable."
-    )
-    parser.add_argument(
         "-t",
         "--threads",
         required=False,
@@ -232,20 +193,11 @@ if __name__ == "__main__":
         type=int,
         help="The maximum number of threads to run in parallel."
     )
-    parser.add_argument(
-        "-x",
-        "--external",
-        required=False,
-        action="store_true",
-        help="If specified, the data will be stored separately from the metadata using JSON-lines format."
-    )
 
     arguments = parser.parse_args()
     input: Path = arguments.input
     output: Path = arguments.output
-    pretty_print: bool = arguments.pretty
     threads: int = arguments.threads
-    external: bool = arguments.external
 
     try:
         output.mkdir(parents=True, exist_ok=True)
@@ -256,7 +208,7 @@ if __name__ == "__main__":
         print("The specified output directory is a file path.")
         exit(1)
 
-    if threads is not None and threads <= 0:
+    if threads is None or threads <= 0:
         threads = multiprocessing.cpu_count() - 1
         
     sas7bdat_inputs = get_input_files(input, ".sas7bdat")
@@ -265,21 +217,17 @@ if __name__ == "__main__":
     tasks = []
     for sas7bdat_input in sas7bdat_inputs:
         current_in = sas7bdat_input
-        current_out = output / Path(sas7bdat_input.name).with_suffix(".json")
-        params = (current_in, current_out, pretty_print, external)
+        current_out = output / Path(sas7bdat_input.name).with_suffix(".jsonl")
+        params = (current_in, current_out)
         tasks.append((convert_sas7bdat, params))
 
     for xport_input in xport_inputs:
         current_in = xport_input
-        current_out = output / Path(xport_input.name).with_suffix(".json")
-        params = (current_in, current_out, pretty_print, external)
+        current_out = output / Path(xport_input.name).with_suffix(".jsonl")
+        params = (current_in, current_out)
         tasks.append((convert_xport, params))
 
-    if threads == None:
-        for converter, params in tasks:
-            converter(*params)
-    else:
-        threads = max(min(threads, len(tasks)), 1)
-        with Pool(processes=threads) as pool:
-            queue = pool.imap_unordered(run_task, tasks)
-            collections.deque(queue, maxlen=0)
+    threads = max(min(threads, len(tasks)), 1)
+    with Pool(processes=threads) as pool:
+        queue = pool.imap_unordered(run_task, tasks)
+        collections.deque(queue, maxlen=0)
