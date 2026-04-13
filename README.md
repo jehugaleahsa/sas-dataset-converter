@@ -422,6 +422,13 @@ Many columns in a dataset are comprised of a limited number of values. Processor
 
 > NOTE: The row data must contain the category values. An alternative would have been to simply store the category index instead. JSON processors can represent categorical data any way they want, but in the JSON the full values must be provided.
 
+#### Missing values
+Often, datasets will need to track missing data. Beyond the use of `null`, some datasets need to track _why_ data is missing. Some datasets will use a separate column, some times referred to as a "null flavor" (*NF) or "missing reason" (*RSN). When using a separate column, using of categories is an obvious choice.
+
+Other datasets will store the reason for missing values in the _same_ column. For numeric columns, it is recommended that the column `type` should be set to `string`, using non-numeric values for the missing reason(s). For text columns, it is recommended to define special marker text for the different missing reasons. It may be beneficial to define these missing reasons in the column `metadata`.
+
+These are just recommendations - this specification provides no hard requirements. Organizations should decide how they will represent missing values and use the column `metadata` section to document their decision where appropriate. 
+
 ### External Data with `external`
 Rather than using subsequent lines for each row, a dataset can specify that its data is located externally, in a separate file using `external`. Since an external dataset can be of any type, the JSON producer and processor must agree on what external formats are supported. For now, there are limited details around what must be contained in the `location` string. The expectation is that it is a file path, relative to the current file. The format/contents of the data file are not currently specified either.
 
