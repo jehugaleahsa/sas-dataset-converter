@@ -307,7 +307,6 @@ These are the rules governing each section, object, and attribute:
         * The file `metadata` object may be empty.
     * A `columns` attribute is required.
         * The `columns` attribute must be an array of objects, referred to as `Column` below.
-        * The `columns` array cannot be empty.
         * The order columns appear in the array controls the order the data appears in the rows.
     * An `external` attribute is optional.
         * The `external` attribute must be an object, referred to as `ExternalReference` below.
